@@ -1,21 +1,11 @@
 import './App.css'
-
-
-const Header = () => {
-    return (
-        <header>
-            <h1>Header</h1>
-        </header>
-    )
-}
+import HookExam from "./component/HookExam.jsx";
 
 function App() {
-    return (
-        <>
-            <Header />
-            <h1>Hello React</h1>
-        </>
-    )
+
+    return <>
+        <HookExam/>
+    </>;
 }
 
 export default App
