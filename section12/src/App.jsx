@@ -1,5 +1,5 @@
 import './App.css'
-import {Link, Route, Routes} from "react-router-dom";
+import {Route, Routes} from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import Diary from "./pages/Diary.jsx";
 import New from "./pages/New.jsx";
@@ -7,7 +7,7 @@ import Edit from "./pages/Edit.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import Button from "./component/Button.jsx";
 import Header from "./component/Header.jsx";
-import {useReducer} from "react";
+import {createContext, useReducer, useRef} from "react";
 
 const mockData = [
     {
@@ -32,47 +32,78 @@ const mockData = [
 ]
 
 function reducer(state, action) {
-    return state;
+    switch (action.type) {
+        case "CREATE":
+            return [action.data, ...state]
+        case "UPDATE" :
+            return [state.map((item) => String(item.id) === String(action.data.id) ? action.data : item)]
+        case "DELETE":
+            return [state.filter((item) => String(item.id) !== String(action.data.id))]
+        default:
+            return state;
+    }
 }
 
-function App() {
+const DiaryStateContext = createContext();
+const DiaryDispatchContext = createContext();
 
+function App() {
     const [data, dispatch] = useReducer(reducer, mockData)
+    const idRef = useRef(3);
+
+    const onCreate = (createDate, emotionId, content) => {
+        dispatch({
+            type: "CREATE",
+            data: {
+                id: idRef.current++,
+                createDate,
+                emotionId,
+                content,
+            }
+        })
+    }
+
+    const onUpdate = (id, createDate, emotionId, content) => {
+        dispatch({
+            type: "UPDATE",
+            data: {
+                id, createDate, emotionId, content
+            }
+        })
+    }
+
+    const onDelete = (id) => {
+        dispatch({
+            type: "DELETE",
+            data: {
+                id: id
+            }
+        })
+    }
+
 
     return (
         <>
             <Header
                 title={"Header"}
                 leftChild={<Button text={"left"}/>}
-                rightChild={<Button text={"right"}/>}
-            />
-            <Button
-                text={123}
-                onClick={() => {
-                    console.log("clicked");
-                }}/>
+                rightChild={<Button text={"right"}/>}/>
 
-            <Button
-                text={123}
-                type={"POSITIVE"}
-                onClick={() => {
-                    console.log("clicked");
-                }}/>
-
-            <Button
-                text={123}
-                type={"NEGATIVE"}
-                onClick={() => {
-                    console.log("clicked");
-                }}/>
-
-            <Routes>
-                <Route path="/" element={<Home/>}/>
-                <Route path="/new" element={<New/>}/>
-                <Route path="/diary/:id" element={<Diary/>}/>
-                <Route path={"*"} element={<NotFound/>}/>
-                <Route path={"/edit/:id"} element={<Edit/>}/>
-            </Routes>
+            <DiaryStateContext.Provider value={data}>
+                <DiaryDispatchContext value={{
+                    onCreate,
+                    onUpdate,
+                    onDelete
+                }}>
+                    <Routes>
+                        <Route path="/" element={<Home/>}/>
+                        <Route path="/new" element={<New/>}/>
+                        <Route path="/diary/:id" element={<Diary/>}/>
+                        <Route path={"*"} element={<NotFound/>}/>
+                        <Route path={"/edit/:id"} element={<Edit/>}/>
+                    </Routes>
+                </DiaryDispatchContext>
+            </DiaryStateContext.Provider>
         </>
     )
 }
