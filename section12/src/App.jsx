@@ -5,27 +5,25 @@ import Diary from "./pages/Diary.jsx";
 import New from "./pages/New.jsx";
 import Edit from "./pages/Edit.jsx";
 import NotFound from "./pages/NotFound.jsx";
-import Button from "./component/Button.jsx";
-import Header from "./component/Header.jsx";
 import {createContext, useReducer, useRef} from "react";
 
 const mockData = [
     {
         id: 1,
-        createDate: new Date().getTime(),
+        createDate: new Date("2025-12-30").getTime(),
         emotionId: 1,
         content: "1번 일기 내용"
     },
 
     {
         id: 2,
-        createDate: new Date().getTime(),
+        createDate: new Date("2025-12-29").getTime(),
         emotionId: 2,
         content: "2번 일기 내용"
     },
     {
         id: 3,
-        createDate: new Date().getTime(),
+        createDate: new Date("2026-01-01").getTime(),
         emotionId: 3,
         content: "3번 일기 내용"
     },
@@ -44,8 +42,8 @@ function reducer(state, action) {
     }
 }
 
-const DiaryStateContext = createContext();
-const DiaryDispatchContext = createContext();
+export const DiaryStateContext = createContext();
+export const DiaryDispatchContext = createContext();
 
 function App() {
     const [data, dispatch] = useReducer(reducer, mockData)
@@ -84,11 +82,6 @@ function App() {
 
     return (
         <>
-            <Header
-                title={"Header"}
-                leftChild={<Button text={"left"}/>}
-                rightChild={<Button text={"right"}/>}/>
-
             <DiaryStateContext.Provider value={data}>
                 <DiaryDispatchContext value={{
                     onCreate,
