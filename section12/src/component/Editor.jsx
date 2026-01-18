@@ -3,44 +3,8 @@ import EmotionItem from "./EmotionItem.jsx";
 import Button from "./Button.jsx";
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
-
-const emotionList = [
-    {
-        emotionId: 1,
-        emotionName: "완전 좋음"
-    },
-    {
-        emotionId: 2,
-        emotionName: "좋음"
-    },
-    {
-        emotionId: 3,
-        emotionName: "보톤"
-    },
-    {
-        emotionId: 4,
-        emotionName: "안좋음"
-    },
-    {
-        emotionId: 5,
-        emotionName: "완전 안좋음"
-    }
-]
-
-const getStringedDate = (targetDate) => {
-    let year = targetDate.getFullYear()
-    let month = targetDate.getMonth() + 1
-    let day = targetDate.getDate()
-
-    if (month < 10) {
-        month = "0" + month
-    }
-    if (day < 10) {
-        day = "0" + day
-    }
-
-    return year + "-" + month + "-" + day
-}
+import {emotionList} from "../util/constanst.js";
+import {getStringedDate} from "../util/get-Stringed-date.js";
 
 const Editor = ({initData, onSubmit}) => {
     const nav = useNavigate();
